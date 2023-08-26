@@ -1,0 +1,119 @@
+{% extends "landing/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-3">
+    <div class="col-md-5 col-sm-12 border-bottom">
+        <h2>Upload Documents</h2>
+    </div>
+</div>
+<br/><br/>
+<div class="row justify-content-center mt-3 mb-5">
+    <div class="col-md-5 col-sm-12 border-bottom">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">Title:</label>
+                <input type="text" class="form-control" id="{{ form.title.id_for_label }}" name="{{ form.title.html_name }}" placeholder="Enter document title" />
+            </div>
+            <div class="form-group">
+                <label for="{{ form.author.id_for_label }}">Author:</label>
+                <input type="text" class="form-control" id="{{ form.author.id_for_label }}" name="{{ form.author.html_name }}" 
+                placeholder="{{ user.first_name }}{{ user.last_name }}" />
+            </div>
+            <div class="form-group">
+                <label for="{{ form.pdf.id_for_label }}">PDF:</label>
+                {{ form.pdf }}
+                <div class="preview-container">
+                    <embed id="pdf-preview" type="application/pdf" style="height: 400px;" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.cover.id_for_label }}">Cover:</label>
+                {{ form.cover }}
+                <div class="preview-container">
+                    <img id="cover-preview" src="#" alt="Cover Preview" style="max-width: 100%; max-height: 400px; display: none;" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload book</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Function to preview PDF and Cover images
+    function previewFile(input, previewId) {
+        const previewContainer = document.querySelector(`#${previewId}`);
+        const file = input.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+            if (previewId === 'pdf-preview') {
+                previewContainer.src = reader.result;
+            } else if (previewId === 'cover-preview') {
+                previewContainer.src = reader.result;
+                previewContainer.style.display = 'block';
+            }
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            if (previewId === 'cover-preview') {
+                previewContainer.style.display = 'none';
+            }
+        }
+    }
+
+    // Event listeners for PDF and Cover input fields
+    const pdfInput = document.querySelector("#{{ form.pdf.auto_id }}");
+    const coverInput = document.querySelector("#{{ form.cover.auto_id }}");
+
+    pdfInput.addEventListener('change', function () {
+        previewFile(this, 'pdf-preview');
+    });
+
+    coverInput.addEventListener('change', function () {
+        previewFile(this, 'cover-preview');
+    });
+</script>
+
+<style>
+    /* Customize this section with your desired styling for the preview containers and mobile responsiveness */
+    .preview-container {
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+
+    /* Custom styles for the author and title fields */
+    .form-group label {
+        font-weight: bold;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 100%;
+    }
+
+    /* Mobile-responsive styles */
+    @media (max-width: 576px) {
+        .col-md-5 {
+            max-width: 100%;
+        }
+
+        .border-bottom {
+            margin-bottom: 15px;
+        }
+
+        .form-control {
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+{% endblock %}

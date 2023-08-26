@@ -1,0 +1,46 @@
+{% extends "landing/base.html" %}
+
+{% block content %}
+</br>
+</br></br>
+ {% block body_header %}
+  <p>
+    <a href="{% url 'home' %}" class="btn btn-primary">:{()___</a>
+  </p>
+ {% endblock %}
+
+<div class="container">
+  <div class="table-responsive">
+    <table style="width: 100%;" class=t1>
+    <thead>
+      <tr>
+        <th class="table-primary">Cover</th>  
+        <th class="table-secondary">Title</th>
+        <th class="table-success">Author</th>
+        <th class="table-danger">Download</th>
+      </tr> 
+    </thead>
+    </tbody>
+      {% for book in books %}
+        <tr>
+          <td>
+            {% if book.cover %}
+              <img src="{{ book.cover.url }}" alt="{{ book.title}}" style="width:100px;">
+            {% else %}
+            <span class="text-muted">No cover</span>
+            {% endif %}
+          </td>
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>
+            <a href="{{ book.pdf.url }}" class="btn btn-primary btn-sm" target="_blank">
+              Download PDF
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody> 
+  </table>
+  </div>
+</div>
+{% endblock %}
