@@ -1,0 +1,40 @@
+{% extends 'landing/base.html' %}
+
+{% block title %}Click the Category{% endblock %}
+
+{% block content %}
+</br>
+</br></br>
+
+{% if category_posts %}
+
+ 
+<h1>{{ cats }}</h1>
+
+<ul>
+{% for post in category_posts %}
+   <div class="yuRUbf"><a href="{% url 'post-detail' post.pk %}">
+   {{ post.title }}</a> 
+      
+   -{{ post.author.first_name }} 
+   {{ post.author.last_name }} - 
+   {{ post.post_date }} <small>
+      
+   {% if user.is_authenticated %}
+      -<a href="{% url 'update_post' post.pk %}">(edit)</a>
+      
+       <a href="{% url 'delete_post' post.pk %}">(Delete)</a>
+   {% endif %}
+
+   </small> <br/>
+   {{ post.body|slice:":200"|safe }}</li>
+
+{% endfor %}
+</ul>  
+
+
+{% else %} 
+<h2> /--{'_'}--\Sorry this page does not exist.</h2>
+   
+{% endif %}
+{% endblock %}

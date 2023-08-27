@@ -1,0 +1,35 @@
+{% extends 'landing/base.html' %}
+{% block title %}Edit Blog Post{% endblock %}
+{% load static %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<section class="container">
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-10 col-sm-12 text-center">  
+    {% if user.is_authenticated == post.author.id %}
+        <div class="d-inline p-2 bg-success text-white">Update Page/0\</div>
+        <br/><br/>
+
+        <div class="form-group">
+            <form method="POST">
+                {% csrf_token %} 
+                {{ form.media }}
+                {{ form.as_p }}
+                <button class="btn btn-warning">Update</button>
+            </form>
+        </div>
+        {% else %}
+        Please Login or register if you don't have an account yet!
+        {% endif %}
+
+    {% else %}
+    Please Login or register if you don't have an account yet!
+
+    {% endif %}
+  </div>
+</sectrion>
+
+{% endblock %}

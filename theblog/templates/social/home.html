@@ -1,0 +1,348 @@
+{% extends 'landing/base.html' %}
+{% load static %}
+
+{% block title %}{:=()){% endblock %}
+
+
+{% block content %}
+
+
+<section class="container">
+  <!--for integrated trading views, investment charts and the rest , including fundamentals-->
+  <hr>
+  <div class="row justify-content-center mt-5">
+    <div class="col-md-10 col-sm-12 text-center">  
+      <!--Carousel Slide-->
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="0" class="active"  aria-current="true" aria-label="Slide 1"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="2"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="3"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="4"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="5"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="6"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="7"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="9"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="10"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="11"></li>
+          <li data-bs-target="#carouselExampleIndicators" data-slide-to="12"></li>
+        </ol>        
+        
+        <div class="carousel-inner">
+          {% for post in object_list %}
+          <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %} ">
+            <!-- post carousel image-->
+            {% if post.image %}
+            <div onclick="window.location='{% url 'post-detail' post.pk %}';" style="cursor: pointer;">
+              <img src="{{ post.image.url }}" class="col-md-10" style="width: 25rem;" alt="...">
+            </div>
+            {% endif %}
+        
+            <div class="carousel-caption mt-3">
+              <h1 class="animate__animated
+              {% if forloop.counter0 == 0 %}
+              animate__fadeInDown
+              {% endif %}
+              {% if forloop.counter == 1 %}
+              animate__slideInDown
+              {% endif %}
+              {% if forloop.revcounter == 2 %}
+              animate__zoomIn
+              {% endif %}">
+              <!--Header-->
+              <h5>
+                <span onclick="window.location='{% url 'post-detail' post.pk %}';" style="cursor: pointer;">
+                  {{ post.title }}
+                </span>
+              </h5>
+              <!--Link to posts page-->
+              <p class="card-text">
+                {{ post.sub_title }}
+                {{ post.author.first_name }} 
+                {{ post.author.last_name }} - 
+                {{ post.created_on }} 
+              </p>
+              <!-- end -->
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+          
+        </div>
+          <a class="carousel-control-prev" data-bs-target="#carouselExampleIndicators" role="button" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" data-bs-target="#carouselExampleIndicators" role="button" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+      </div>
+      <!--end-->
+</section>
+
+
+<!-- Carousel wrapper -->
+<br>
+<!--colors carousel-->
+ <div class="container my-4">
+      <p>  
+        <body>
+          <div class="d-flex justify-content-center justify-content-md-start">
+            <div class="text-center me-3">
+                <a class="btn btn-sm btn-dark mb-1 bi bi-bar-chart-line" target="_blank" href="{% url 'brokergallery' %}" role="button"></a>
+                <p>Add broker</p>
+            </div>
+            <div class="text-center me-3">
+                <a class="btn btn-sm btn-dark mb-1 bi bi-cash" target="_blank" href="{% url 'gallery' %}" role="button"></a>
+                <p>Prop firm</p>
+            </div>
+            <div class="text-center me-3">
+                <a class="btn btn-sm btn-dark mb-1 bi bi-cash" target="_blank" href="{% url 'gallery' %}" role="button"></a>
+                <p>Prop firm</p>
+            </div>
+            <div class="text-center">
+                <a class="btn btn-sm btn-dark mb-1 bi bi-bar-chart-line" target="_blank" href="{% url 'brokergallery' %}" role="button"></a>
+                <p>Add broker</p>
+            </div>
+          </div>
+        </body>     
+      </p>
+
+      <p>
+        {% if post.author.profile.website_url %}
+        <a
+          href="{{ post.author.profile.website_url }}" class="Website"><i class="bx bxl-Website" target="_blank">
+      
+          <strong>TradingView</strong></a
+        >
+        {% endif %}
+      </p>
+     <hr class="mt-5">
+
+  <p>Search to find your favorite Analysis - microsecond
+    <form class="d-flex" method="GET" action="{% url 'profile-search' %}">
+      <div class="input-group">
+        <span class="input-group-text" id="basic-addon1">
+        <input type="text" class="form-control" placeholder="Find Analysis" aria-label="Find Analysis" aria-describedby="basic-addon1" name="query" value="{{ request.GET.query }}">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i>search</button>
+        </span>
+      </div>
+    </form>
+  </p>
+  <!--brokers and propfirms fields-->
+  <a class="btn btn-dark me-2 bi bi-bar-chart-line" target="_blank" href="{% url 'brokerview' %}" role="button">
+    Add broker
+  </a>
+  <a class="btn btn-dark me-2 bi bi-cash"  target="_blank" href="{% url 'listview' %}" role="button">
+    Prop firm
+  </a>
+ 
+  <!--end-->
+  <!--post for brokers and propfirms-->
+  
+  
+  <style>
+    /* Your existing styles here */
+
+    /* New styles for the broker card and image */
+    .broker-card {
+        background-color: #503c3d;
+        border-radius: 10px;
+        padding: 5px;
+        text-align: center;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .broker-image {
+        max-width: 80px;
+        max-height: 80px;
+        border-radius: 5px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .broker-description {
+        margin-top: 5px;
+        font-size: 10px;
+    }
+
+    .broker-category {
+        font-size: 10px;
+        font-weight: bold;
+        margin-top: 3px;
+    }
+</style>
+
+<body class="m-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Sidebar content -->
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    <!-- Existing broker card loop -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recently added broker card -->
+
+    {% if recently_added_broker %}
+    <hr>
+      <div class="container mt-3">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="broker-card">
+                      <a href="https://{{ recently_added_broker.website_url }}" target="_blank">
+                          <img class="broker-image" src="{{ recently_added_broker.image.url }}" alt="Recently Added Broker">
+                      </a>
+                      <p class="broker-description">{{ recently_added_broker.description }}</p>
+                      <p class="broker-category">Category: {{ recently_added_broker.category.name }}</p>
+                      <!-- Other fields here -->
+                  </div>
+              </div>
+          </div>
+      </div>
+    {% endif %}
+
+</body>
+
+<script>
+    // Add click event listener to the broker image
+    document.querySelector('.broker-image').addEventListener('click', function () {
+        window.open('{{ recently_added_broker.image.url }}', '_blank');
+    });
+</script>
+
+ 
+<!--this is for propfirms views-->
+<style>
+  /* Your existing styles here */
+
+  /* New styles for the photo card and image */
+  .photo-card {
+      background-color: #313253;
+      border-radius: 10px;
+      padding: 5px;
+      text-align: center;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .photo-image {
+      max-width: 80px;
+      max-height: 80px;
+      border-radius: 5px;
+      display: block;
+      margin: 0 auto;
+  }
+
+  .photo-description {
+      margin-top: 5px;
+      font-size: 10px;
+  }
+
+  .photo-category {
+      font-size: 10px;
+      font-weight: bold;
+      margin-top: 3px;
+  }
+</style>
+
+<body class="m-5">
+  <div class="container">
+      <div class="row">
+          <div class="col-md-3">
+              <!-- Sidebar content -->
+          </div>
+          <div class="col-md-9">
+              <div class="row">
+                  <!-- Existing photo card loop -->
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Recently added photo card -->
+
+  {% if recently_added_photo %}
+  <hr class="mb-5"/>
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="photo-card">
+                    <a href="https://{{ recently_added_photo.website_url }}" target="_blank">
+                      <img class="photo-image" src="{{ recently_added_photo.image.url }}" alt="Recently Added photo">
+                    </a>
+                    <p class="photo-description">{{ recently_added_photo.description }}</p>
+                    <p class="photo-category">Category: {{ recently_added_photo.category.name }}</p>
+                    <!-- Other fields here -->
+                </div>
+            </div>
+        </div>
+    </div>
+  {% endif %}
+
+</body>
+
+<script>
+  // Add click event listener to the photo image
+  document.querySelector('.photo-image').addEventListener('click', function () {
+      window.open('{{ recently_added_photo.image.url }}', '_blank');
+  });
+</script>
+
+<hr class="mb-5"/>
+
+<!--Carousel Wrapper-->
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+
+  <!--Indicators-->
+  <ol class="carousel-indicators" class="carousel slide" data-bs-ride="carousel">
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"  aria-current="true" aria-label="Slide 1">
+    </li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    
+  </ol>
+  <!--/.Indicators-->
+
+  <!--Slides-->
+  <div class="carousel-inner" role="listbox">
+    <!--First slide-->
+  {% for post, brokers in matched_brokers %}
+    {% if brokers %}
+        <div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}">
+            <div class="col-md-3" style="float:left">
+                <div class="card mb-2">
+                    {% if post.header_image %}
+                        <img class="card-img-top" src="{{ post.header_image.url }}" alt="Card image cap">
+                    {% endif %}
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a>
+                        </h4>
+                        <p class="card-text">{{ post.snippet }}</p>
+                        <a class="btn btn-primary"> <small class="text-white fmuted">{{ post.created_on }}</small></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+  {% endfor %}
+
+  </div>
+  <!--/.Slides-->
+  <!--Controls-->
+  <div class="controls-top">
+    <a class="btn-floating carousel-control-prev" href="#carouselExampleIndicators" data-slide="prev"><i class="fas fa-chevron-left"></i></a>
+    <a class="btn-floating carousel-control-next" href="#carouselExampleIndicators" data-slide="next"><i
+        class="fas fa-chevron-right"></i></a>
+  </div>
+  <!--/.Controls-->
+
+</div>
+<!--/.Carousel Wrapper-->
+{% endblock %}

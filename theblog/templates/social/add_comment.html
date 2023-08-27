@@ -1,0 +1,20 @@
+{% extends 'landing/base.html' %}
+{% block title %}Comment On Blog Post{% endblock %}
+{% block content %}
+
+</br>
+</br></br>
+{% if user.is_authenticated %}
+    <h1>{:=)()}</h1>
+    
+    <h1>Add Comment...</h1>
+    <br/><br/>
+    <div class="form-group">
+        <form method="POST" >
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-warning">Add Comment</button>
+    </div>
+{% endif %}
+
+{% endblock %}
