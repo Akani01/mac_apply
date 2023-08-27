@@ -1,0 +1,103 @@
+{% extends 'landing/base.html' %}
+
+{% block content %}
+
+    <Style>
+        .image-thumbail {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .list-group-item a {
+            text-decoration: none;
+            color: black;
+        }
+    </style>
+</head>
+<br>
+<br>
+<body class="m-5">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        Categories
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="{% url 'brokerview' %}">All</a>
+                        </li>
+                        {% for category in categories %}
+                        <li class=" list-group-item">
+                            <a href="{% url 'brokergallery' %}?category={{category.name}}">
+                                {{category.name}}
+                            </a>
+                        </li>
+                        {% endfor %}
+                        <li class="list-group-item">
+                            <a href="{% url 'brokerview' %}" class="btn btn-dark btn-block btn-sm m-1">View Brokers</a>
+                        </li>
+
+                        <a href="{% url 'addbroker' %}" class="btn btn-dark btn-block btn-sm m-1">Add Broker</a>
+                        <a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">Logout</a>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="custom-heading">Brokers</h1>
+                    </div>
+                    {% for broker in brokers %}
+                    <div class="col-md-4">
+                        <div class="custom-container">
+                            <div class="card custom-card">
+                                <a href="{% url 'delete-broker' broker.id %}" class="edit-color"><i class="fas fa-trash"></i></a>
+                                <a href="{% url 'broker' broker.id %}">
+                                    <img class="image-thumbnail" src="{{broker.image.url}}" alt="Card image cap">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ broker.description }}</h5>
+                                    <p class="card-text">Category: {{ broker.category.name }}</p>
+                                    <ul class="list-unstyled">
+                                        {% if broker.website_url %}
+                                        <li><a href="https://{{ broker.website_url }}">Website</a></li>
+                                        {% endif %}
+                                        {% if broker.whatsapp_number %}
+                                        <li>
+                                            <a href="https://wa.me/{{ broker.whatsapp_number }}" target="_blank" class="whatsapp">
+                                                <i class="bx bxl-whatsapp">WhatsApp</i>
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                        {% if broker.facebook_url %}
+                                        <li><a href="https://{{ broker.facebook_url }}">Facebook</a></li>
+                                        {% endif %}
+                                        {% if broker.twitter_url %}
+                                        <li><a href="https://{{ broker.twitter_url }}">Twitter</a></li>
+                                        {% endif %}
+                                        <!-- Add more links with the unique variable (https://) as needed -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-md-12">
+                        <h3>No Brokers Found</h3>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+{% endblock %}

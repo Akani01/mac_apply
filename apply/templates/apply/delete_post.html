@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Delete Post Blog Post!{% endblock %}
+{% block content %}
+
+</br>
+</br></br>
+{% if user.is_authenticated %}
+    <div class="d-inline p-2 bg-danger text-white">{:=)()}</div>
+    
+     <a class="d-block p-2 bg-danger text-white">Delete...{{post.title}}</a>
+    <br/><br/>
+    <div class="form-group">
+        <form method="POST">
+            {% csrf_token %}
+            <br/><br/>
+            <strong>Are you sure!</strong>
+            <button class="btn btn-success" href="{% url 'projects' %}">yes(:</button>
+            <button class="btn btn-primary" href="{% url 'projects' %}">NO(:</button>
+    </div>
+{% endif %}
+
+{% endblock %}

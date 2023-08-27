@@ -1,0 +1,161 @@
+{% extends 'landing/base.html' %}
+{% load static %}
+
+<!-- Block container for Colors -->
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-3 col-sm-6">
+            <a href="{% url 'home' %}" class="btn btn-light">Home</a>
+        </div>
+    </div>
+    <!-- End container -->
+
+    </br>
+    </br>
+    </br>+
+    <div class="jumbotron text-center">
+        <div class="card mb-3">
+            <div class="row no_gutters">
+                <div class="col-md-2">
+                    {% if profile.picture %}
+                        <img src="{{ profile.picture.url }}" class="rounded-circle" width="100" height="100" />
+                        {% if profile.name %}
+                            <h3 class="py-4">{{ profile.name }}
+                                <span>
+                                    {% if request.user == user %}
+                                        <a href="{% url 'profile-edit' profile.pk %}" class="edit-color"><i class="far fa-edit"></i></a>
+                                    {% endif %}
+                                </span>
+                            {% endif %}
+                    {% endif %}
+                </div>
+                <div class="col-md-10">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ profile.user.username }}__{'_'}__</h5>
+
+                        <!-- this is the colors web url -->
+
+                        <p class="small text-muted">
+                            {% if profile.website_url %}
+                                | <a href="{{ profile.website_url }}" class="Website">
+                                    Website</a>
+                            {% endif %}
+
+                            {% if profile.zoom_url %}
+                                | <a href="{{ profile.zoom_url }}" class="zoom">
+                                    Zoom</a>
+                            {% endif %}
+
+                            {% if profile.google_url %}
+                                | <a href="{{ profile.google_url }}" class="google">
+                                    Google</a>
+                            {% endif %}
+
+                            {% if profile.playstore_url %}
+                                | <a href="{{ profile.playstore_url }}" class="playstore">
+                                    Playstore</a>
+                            {% endif %}
+
+                            {% if profile.twitter_url %}
+                                | <a href="{{ profile.twitter_url }}" class="twitter">
+                                    Twitter</a>
+                            {% endif %}
+
+                            {% if profile.instagram_url %}
+                                | <a href="{{ profile.instagram_url }}" class="instagram">
+                                    Instagram</a>
+                            {% endif %}
+
+                            {% if profile.pinterest_url %}
+                                | <a href="{{ profile.pinterest_url }}" class="pinterest">
+                                    Pinterest</a>
+                            {% endif %}
+
+                            {% if profile.youtube_url %}
+                                | <a href="{{ profile.youtube_url }}" class="youtube">
+                                    Youtube</a>
+                            {% endif %}
+
+                            {% if profile.qr_name %}
+                                | <a href="{{ profile.qr_name }}" class="qrname">
+                                    QR-code</a>
+                            {% endif %}
+
+                        </p>
+                            <p class="card-text">
+                            
+                                <!-- Profile followers -->
+                                {% if profile.bio %}
+                                    <p>{{ profile.bio }}</p>
+                                {% endif %}
+
+                                <div class="mb-3">
+                                    <a href="{% url 'list-followers' profile.pk %}" class="post-link">Followers: {{ number_of_followers }}</a>
+                                </div>
+
+                            </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Colors followers -->
+    <div class="row justify-content-center mt-5">
+        <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-5 py-3">
+            {% if user == request.user %}
+            {% else %}
+                {% if is_following %}
+                    <form method="POST" action="{% url 'remove-follower' profile.pk %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-danger" type="submit">Unfollow</button>
+                    </form>
+                {% else %}
+                    <form method="POST" action="{% url 'add-follower' profile.pk %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-success" type="submit">Follow</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <!-- End -->
+
+    {% for post in posts %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-sm-12 border-bottom">
+            <div>
+
+                <p class="post-text">
+                    <a class="text-primary post-link" href="{% url 'profile' post.author.profile.pk %}">{{ post.author }}</a> {{ post.created_on }}
+                </p>
+            </div>
+            <div class="position-relative">
+                <p>{{ post.body|safe }}</p>
+                <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+            </div>
+
+            <div class="d-flex flex-row">
+                <form method="POST" action="{% url 'like' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="remove-default-btn" type="submit">
+                        <i class="far fa-thumbs-up"> <span>{{ post.likes.all.count }}</span></i>
+                    </button>
+                </form>
+
+                <form method="POST" action="{% url 'dislike' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="remove-default-btn" type="submit">
+                        <i class="far fa-thumbs-down"> <span>{{ post.dislikes.all.count }}</span></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

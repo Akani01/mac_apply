@@ -1,0 +1,147 @@
+{% extends 'landing/base.html' %}
+
+{% block content %}
+<body class="m-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <a href="{% url 'brokergallery' %}" class="btn btn-dark my-3">Go Back</a>
+                <div class="card">
+                    <form method='POST' action="{% url 'addbroker' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Description field -->
+                        <div class="form-group m-3">
+                            <label>Description</label>
+                            <input required name="description" type="text" placeholder="Enter a description"
+                                class="form-control">
+                        </div>
+                        
+                        <!-- Select category -->
+                        <div class="form-group m-3">
+                            <label>Select a category</label>
+                            <select name="category" class="form-control">
+                                <option value='none'>Select a category...</option>
+                                {% for category in categories %}
+                                <option value='{{category.id}}'>{{category.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- Create a new category -->
+                        <div class="form-group m-3">
+                            <label>Create a new category</label>
+                            <input name="category_new" type="text" placeholder="Create a new category"
+                                class="form-control">
+                        </div>
+                        
+                        <!-- Upload image -->
+                        <div class="form-group m-3">
+                            <label>Upload image</label>
+                            <input required name="image" type="file" class="form-control-file" id="imageInput">
+                        </div>
+                        <div id="imagePreview" class="form-group m-3" style="display: none;">
+                            <label>Image Preview</label>
+                            <img id="previewImage" src="#" alt="Image Preview" style="max-width: 100%;">
+                            <button type="button" class="btn btn-danger" onclick="cancelImagePreview()">Cancel</button>
+                        </div>
+                        
+                        <!-- WhatsApp Number -->
+                        <div class="form-group m-3">
+                            <label>WhatsApp Number</label>
+                            <input name="whatsapp_number" type="text" placeholder="Enter WhatsApp number"
+                                class="form-control">
+                        </div>
+                        
+                        <!-- Dropdown for URL Type -->
+                        <div class="form-group m-3">
+                            <label>Select URL Type</label>
+                            <select name="url_type" id="urlType" class="form-control">
+                                <option value="">Select URL Type...</option>
+                                <option value="website_url">Website URL</option>
+                                <option value="facebook_url">Facebook URL</option>
+                                <option value="twitter_url">Twitter URL</option>
+                                <option value="playstore_url">Play Store URL</option>
+                                <option value="linkedin_url">LinkedIn URL</option>
+                                <option value="instagram_url">Instagram URL</option>
+                                <option value="pinterest_url">Pinterest URL</option>
+                                <option value="youtube_url">YouTube URL</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Container for dynamic URL input fields -->
+                        <div id="dynamicUrlFields" class="m-3"></div>
+                        
+                        <!-- Button to add more URLs -->
+                        <button type="button" class="btn btn-secondary" onclick="addUrlField()">Add URL Field</button>
+                        
+                        <button type='submit' class="btn btn-primary m-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<!-- JavaScript to dynamically add and remove URL input fields -->
+<script>
+    function addUrlField() {
+        const urlTypeDropdown = document.getElementById('urlType');
+        const dynamicUrlFields = document.getElementById('dynamicUrlFields');
+
+        // Get the selected URL type
+        const selectedUrlType = urlTypeDropdown.value;
+
+        if (selectedUrlType) {
+            const urlField = document.createElement('div');
+            urlField.className = 'form-group m-3';
+
+            const label = document.createElement('label');
+            label.textContent = selectedUrlType.replace("_", " ").toUpperCase();
+            urlField.appendChild(label);
+
+            const input = document.createElement('input');
+            input.name = selectedUrlType;
+            input.type = 'text';
+            input.placeholder = 'Enter ' + selectedUrlType.replace("_", " ");
+            input.className = 'form-control';
+            urlField.appendChild(input);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'btn btn-danger';
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', function() {
+                dynamicUrlFields.removeChild(urlField);
+            });
+            urlField.appendChild(deleteButton);
+
+            dynamicUrlFields.appendChild(urlField);
+        }
+    }
+
+    function cancelImagePreview() {
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImage = document.getElementById('previewImage');
+
+        imageInput.value = ''; // Clear the input
+        previewImage.src = '#';
+        imagePreview.style.display = 'none';
+    }
+
+    // Handle image preview when a file is selected
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = document.getElementById('previewImage');
+
+    imageInput.addEventListener('change', function(event) {
+        const selectedImage = event.target.files[0];
+        if (selectedImage) {
+            previewImage.src = URL.createObjectURL(selectedImage);
+            imagePreview.style.display = 'block';
+        }
+    });
+</script>
+{% endblock %}

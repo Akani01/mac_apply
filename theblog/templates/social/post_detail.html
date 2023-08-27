@@ -1,0 +1,526 @@
+{% extends 'landing/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<!--by colors-->
+    <br>
+    <div class="container">
+    <div class="row mt-3">
+        <div class="col">
+        <a class="btn btn-secondary bi bi-bar-chart-line" target="_blank" href="{% url 'brokerview' %}" role="button">
+            View_Broker
+        </a>
+        <a class="btn btn-success bi me-2 bi bi-cursor" target="_blank" href="{% url 'home' %}" role="button">
+            Home
+        </a>
+        <a class="btn btn-danger bi bi-bank" target="_blank" href="" role="button">
+            Events
+        </a>
+        <a class="btn btn-warning bi bi-gear-wide-connected" target="_blank" href="{% url 'edit_profile' %}" role="button">
+            Settings
+        </a>
+        <a class="btn btn-info bi bi-bounding-box" target="_blank" href="{% url 'add' %}" role="button">
+            Add_Propfirms
+        </a>
+        <a class="btn btn-light bi bi-bag-plus" target="_blank" href="{% url 'addbroker' %}" role="button">
+            Add_Broker
+        </a>
+        </div>
+    </div>
+    </div>
+
+    <div class="container mt-5">
+    <div class="row">
+        <div class="col-md-5 col-sm-6">
+        <a href="{% url 'home' %}" class="btn btn-light"></a>
+        </div>
+    </div>
+    <!--Post details-->
+
+    <h1>{{ post.title }}</h1>
+    <small>
+        By: {{ post.author.first_name }} {{ post.author.last_name }} - {{ post.created_on }}-
+        {% if user.is_authenticated %}
+        {% if user.id == post.author.id %}
+            -<a href="{% url 'post-edit'  post.pk %}">(Edit)</a>
+        {% endif %}
+        {% endif %}
+    </small><br>
+    <hr>
+    <br>
+
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Add your existing CSS here */
+        /* ... */
+        
+        /* Full screen styles */
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        /* Additional styling for the image in full screen mode */
+        .fullscreen img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        /* Hide the full screen button when in full screen mode */
+        .fullscreen #fullscreen-button {
+            display: none;
+        }
+    </style>
+    </head>
+    <body>
+        <!-- Your existing HTML content -->
+        <!-- ... -->
+    
+       {% if post.header_image %}
+       <div class="image-container">
+            <button id="fullscreen-button">
+                <i class="fas fa-expand"></i> <!-- Font Awesome icon for full screen -->
+            </button>
+            <img src="{{ post.header_image.url }}" class="img-fluid responsive-img" alt="...">
+        </div>
+        {% endif %}
+    
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var imageContainer = document.querySelector(".image-container");
+                var fullscreenButton = document.getElementById("fullscreen-button");
+    
+                if (imageContainer && fullscreenButton) {
+                    fullscreenButton.addEventListener("click", function () {
+                        // Toggle the fullscreen class on the image container
+                        imageContainer.classList.toggle("fullscreen");
+                    });
+    
+                    imageContainer.addEventListener("click", function (event) {
+                        // Toggle the fullscreen class when the image is clicked
+                        if (event.target.nodeName === "IMG") {
+                            imageContainer.classList.toggle("fullscreen");
+                        }
+                    });
+                }
+            });
+        </script>
+    </body>
+
+        <!--THIS IS THE RESPONSIVE APPLICATION PAGE-->
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+            <style>
+                .paper {
+                    background-color: #fff;
+                    border: 1px solid #ccc;
+                    padding: 20px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    margin: 20px;
+                }
+        
+                .content {
+                    font-size: 16px;
+                }
+        
+                .btn-copy {
+                    padding: 10px 20px;
+                    background-color: #4CAF50;
+                    color: #fff;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                }
+        
+                .btn-copy:hover {
+                    background-color: #45a049;
+                }
+        
+                @media screen and (max-width: 480px) {
+                    .paper {
+                        padding: 10px;
+                    }
+        
+                    .btn-copy {
+                        padding: 5px 10px;
+                        font-size: 14px;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <hr>
+            <div class="paper">
+                <div class="content">
+                    <div id="postContent">
+                        {{ post.Where_to_Apply }}<br>
+                        <hr>
+                        {{ post.body|safe }}
+                    </div>
+                    <!-- Copy button -->
+                    <button onclick="copyText()" class="btn-copy">Copy</button>
+                </div>
+            </div>
+        
+            <script>
+                function copyText() {
+                    var postContent = document.getElementById('postContent');
+                    var range = document.createRange();
+                    range.selectNode(postContent);
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(range);
+                    document.execCommand('copy');
+                    window.getSelection().removeAllRanges();
+        
+                    alert('Content copied to clipboard!');
+                }
+            </script>
+        </body>
+        <hr>
+    <!--Photo gallery by 2partners-->
+      <div class="container">
+        <div class="row mt-6">
+            <div class="col">
+              <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        Categories
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="{% url 'listview' %}" class="btn btn-dark btn-block btn-sm m-1">View Brokers</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="{% url 'gallery' %}" class="btn btn-dark btn-block btn-sm m-1">My Broker</a>
+                        </li>
+
+                        <a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">Add Broker page</a>
+                        <a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">Logout</a>
+                    </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+            <div class="row no_gutters">
+                <div class="col-md-4">
+                {% if post.author.profile.picture %}
+                    <img src="{{ post.author.profile.picture.url }}"
+                        class="card-img">
+
+                {% else %}
+                    <img src="{% static 'theblog/images/default_profile_pic.png' %}" 
+                    class="card-img">
+                {% endif %}
+                       
+                </div>
+                <div class="col-md-10">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ post.author.first_name }} 
+                        {{ post.author.last_name }}
+                          
+                            
+                                {% if is_following %}
+                                    <form method="POST" action="{% url 'remove-follower' profile.pk %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-danger" type="submit">Unfollow</button>
+                                    </form>
+                                    
+                                    {% else %}
+                                    <form method="POST" action="{% url 'add-follower' profile.pk %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-outline-success" type="submit">Follow</button>
+                                    </form>
+                                    <div class="alert alert-success alert-dismissible fade show mb-0" role="alert">
+                                        <strong>NOTICE!</strong><a>visit official site for more details </a>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button> 
+                                    </div> 
+                                {% endif %}
+                    </h5>     
+                    <p class="small text-muted">
+                    {% if post.author.profile.website_url %}
+                    | <a href="https://{{ post.author.profile.website_url }}" class="Website"><i class="bx bxl-Website">Website</i></a>
+                    {% endif %}
+                    
+                    {% if post.author.profile.google_url %}
+                        | <a href="https://{{ post.author.profile.google_url }}" class="Website"><i class="bx bxl-Website">Google</i></a>
+                    {% endif %}
+                    
+                    {% if post.author.profile.playstore_url %}
+                        | <a href="https://{{ post.author.profile.playstore_url }}" class="Website"><i class="bx bxl-Website">Playstore</i></a>
+                    {% endif %}
+                    
+                    {% if post.author.profile.zoom_url %}
+                        | <a href="https://{{ post.author.profile.zoom_url }}" class="Website"><i class="bx bxl-Website">Zoom</i></a>
+                    {% endif %}
+                    
+                    {% if post.author.profile.linkedin_url %}
+                        | <a href="https://{{ post.author.profile.linkedin_url }}" class="facebook"><i class="bx bxl-facebook">LinkedIn</i></a>
+                    {% endif %}
+                    
+                    {% if post.author.profile.facebook_url %}
+                        | <a href="https://{{ post.author.profile.facebook_url }}" class="facebook"><i class="bx bxl-facebook">Facebook</i></a>
+                    {% endif %}
+                    
+                    {% if post.author.profile.twitter_url %}
+                        | <a href="https://{{ post.author.profile.twitter_url }}" class="twitter"><i class="bx bxl-twitter">Twitter</i></a>
+                    {% endif %}
+                    
+                    {% if post.author.profile.instagram_url %}
+                        | <a href="https://{{ post.author.profile.instagram_url }}" class="Instagram"><i class="bx bxl-Instagram">Instagram</i></a>
+                    {% endif %}
+                    
+                    {% if post.author.profile.pinterest_url %}
+                        | <a href="https://{{ post.author.profile.pinterest_url }}" class="pinterest"><i class="bx bxl-pinterest">Pinterest</i></a>
+                    {% endif %}
+                    
+                    
+                    <!--qr-code-->
+                    <div class="ui container">
+                        <img src={{obj.qr_code.url}}>
+                        </p>
+                        <p class="card-text">
+                            {{ post.author.profile.bio }}
+                        </p>
+                    </div>
+                    <hr>
+                    {% if request.user == post.author %}
+                    <!--post category-->
+                    <!--will be added here-->
+                    <!--end category-->
+                        <a href="{% url 'post-edit' post.pk %}" class="edit-color"><i class="far fa-edit"></i></a>
+                        <a href="{% url 'post-delete' post.pk %}" class="edit-color"><i class="fas fa-trash"></i></a>
+                    {% endif %}
+                    <p>Followers: {{ profile.followers.all.count }}</p>
+                    
+
+
+                <div class="d-flex flex-row">
+                <form method="POST" action="{% url 'like' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="remove-default-btn" type="submit">
+                        <i class="far fa-thumbs-up"> <span>{{ post.likes.all.count }}</span></i>
+                    </button>
+                </form>
+
+                <form method="POST" action="{% url 'dislike' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="remove-default-btn" type="submit">
+                        <i class="far fa-thumbs-down"> <span>{{ post.dislikes.all.count }}</span></i>
+                    </button>
+                </form>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div> 
+        <hr>
+        <!--text area-->
+        <style>
+            /* Comment section styles */
+            .comment-section {
+                margin-top: 20px;
+                padding: 20px;
+                border: 1px solid #ccc;
+                background-color: #f7f7f7;
+            }
+        
+            .comment-list {
+                list-style: none;
+                padding: 0;
+            }
+        
+            .comment {
+                margin-bottom: 20px;
+            }
+        
+            .comment .author {
+                display: flex;
+                align-items: center;
+                font-weight: bold;
+            }
+        
+            .comment .author .profile-picture {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-right: 10px;
+            }
+        
+            .comment .timestamp {
+                color: #888;
+                font-size: 12px;
+            }
+        
+            .comment .content {
+                margin-top: 5px;
+            }
+        
+            .comment .actions {
+                margin-top: 10px;
+            }
+        
+            .comment .reply-button {
+                color: #007bff;
+                cursor: pointer;
+                text-decoration: underline;
+            }
+        
+            .comment-form {
+                margin-top: 20px;
+            }
+        
+            .comment-form textarea {
+                width: 100%;
+                min-height: 100px;
+                resize: vertical;
+            }
+        
+            .comment-form button {
+                margin-top: 10px;
+                padding: 8px 16px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+        
+            .comment-form button:hover {
+                background-color: #0056b3;
+            }
+        
+            .comment-success {
+                color: green;
+            }
+        
+            .comment-error {
+                color: red;
+            }
+        </style>
+        
+        <!-- Comment section -->
+        <div class="comment-section">
+            <h3>Comments</h3>
+        
+            <ul class="comment-list">
+                <!-- Render comments -->
+                {% for comment in comments %}
+                    <li class="comment">
+                        <div class="author">
+                            {% if comment.author.profile.picture %}
+                                <img src="{{ comment.author.profile.picture.url }}" alt="Profile Picture" class="profile-picture">
+                            {% else %}
+                                <img src="{% static 'default_profile_picture.jpg' %}" alt="Default Profile Picture" class="profile-picture">
+                            {% endif %}
+                            {{ comment.author.username }}
+                        </div>
+                        <div class="timestamp">{{ comment.created_on }}</div>
+                        <div class="content">{{ comment.comment }}</div>
+                        <div class="actions">
+                            <span class="reply-button">Reply</span>
+                        </div>
+                        <!-- Render child comments recursively -->
+                        {% if comment.is_parent %}
+                            <ul class="comment-list">
+                                {% for reply in comment.children %}
+                                    <li class="comment">
+                                        <!-- Render reply content -->
+                                        <!-- Add any desired styling or formatting here -->
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        
+            <!-- Comment form -->
+            <div class="comment-form">
+                <h4>Leave a Comment</h4>
+                <form id="comment-form" method="post">
+                    {% csrf_token %}
+                    <textarea name="comment" id="comment-input" placeholder="Write your comment here" required></textarea>
+                    <br>
+                    <button type="submit" id="submit-comment">Submit</button>
+                </form>
+                <div id="comment-status"></div>
+            </div>
+        </div>
+        
+
+
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // Submit comment form using AJAX
+                $('#comment-form').on('submit', function(event) {
+                    event.preventDefault();
+        
+                    // Prepare form data
+                    var formData = {
+                        'comment': $('#comment-input').val(),
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+                    };
+        
+                    // Send AJAX request
+                    $.ajax({
+                        type: 'POST',
+                        url: '{% url "add_comment" %}',
+                        data: formData,
+                        success: function(response) {
+                            // Clear comment input
+                            $('#comment-input').val('');
+        
+                            // Display success message
+                            $('#comment-status').removeClass('comment-error').addClass('comment-success').text('Comment submitted successfully.');
+        
+                            // Add the new comment to the comment list
+                            var newComment = $('<li class="comment">' +
+                                '<div class="author">' + response.author + '</div>' +
+                                '<div class="timestamp">' + response.created_on + '</div>' +
+                                '<div class="content">' + response.comment + '</div>' +
+                                '<div class="actions">' +
+                                '<span class="reply-button">Reply</span>' +
+                                '</div>' +
+                                '</li>');
+        
+                            // Append the new comment to the comment list
+                            $('.comment-list').append(newComment);
+                        },
+                        error: function(xhr) {
+                            // Display error message
+                            $('#comment-status').removeClass('comment-success').addClass('comment-error').text('Error submitting comment.');
+                        }
+                    });
+                });
+            });
+        </script>
+        </div>
+    </div>
+</div>
+            
+        
+   
+  
+{% endblock content %}

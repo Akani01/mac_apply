@@ -1,0 +1,153 @@
+{% extends 'landing/base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center">Sign Up</h1>
+            <br/><br/>
+            <div class="form-group">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.media }}
+                    <!--other social media signup-->
+                    
+                    <!--ENd-->
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}">Username:</label>
+                        {{ form.username }}
+                        <span class="error-message">{{ form.username.errors }}</span>
+                        <ul id="username-requirements" class="requirements">
+                            <li>@/+/_ e.g +robot username must have a special character</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.first_name.id_for_label }}">First Name:</label>
+                        {{ form.first_name }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+                        {{ form.last_name }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}">Email:</label>
+                        {{ form.email }}
+                        <span class="error-message">{{ form.email.errors }}</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.password1.id_for_label }}">Password:</label>
+                        {{ form.password1 }}
+                        <span class="error-message">{{ form.password1.errors }}</span>
+                        <input type="checkbox" id="show-new-password" class="form-check-input" style="margin-left: 10px;">
+                        <label class="form-check-label" for="show-new-password">Show Password</label>
+                        <div id="password-strength-info" class="mt-2"></div>
+                    </div>
+                    <ul id="password-requirements" class="requirements">
+                        <li>Your password can’t be too similar to your other personal information.</li>
+                        <li>Your password must contain at least 8 characters.</li>
+                        <li>Your password can’t be a commonly used password.</li>
+                        <li>Your password can’t be entirely numeric.</li>
+                    </ul>
+                    <div class="mb-3">
+                        <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+                        {{ form.password2 }}
+                        <span class="error-message">{{ form.password2.errors }}</span>
+                    </div>
+
+                    <button class="btn btn-warning">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript for showing/hiding password
+    document.getElementById('show-new-password').addEventListener('change', function() {
+        var newPasswordInput = document.getElementById('{{ form.password1.auto_id }}');
+        if (this.checked) {
+            newPasswordInput.type = 'text';
+        } else {
+            newPasswordInput.type = 'password';
+        }
+    });
+
+    // JavaScript for checking password strength
+    var passwordRequirements = document.getElementById('password-requirements');
+    var passwordStrengthInfo = document.getElementById('password-strength-info');
+
+    function checkPasswordStrength() {
+        var password = document.getElementById('{{ form.password1.auto_id }}').value;
+        var requirementsMet = true;
+
+        // Check password requirements
+        var requirements = [
+            /[a-zA-Z]/,        // Must contain letters (both uppercase and lowercase)
+            /\d/,              // Must contain at least one digit
+            /[^\w\s]/,         // Must contain at least one special character
+            /^.{8,}$/          // Must be at least 8 characters long
+        ];
+
+        var requirementsMessages = [
+            "Must contain letters (both uppercase and lowercase)",
+            "Must contain at least one digit",
+            "Must contain at least one special character",
+            "Must be at least 8 characters long"
+        ];
+
+        var requirementsList = [];
+        for (var i = 0; i < requirements.length; i++) {
+            if (!requirements[i].test(password)) {
+                requirementsMet = false;
+                requirementsList.push(requirementsMessages[i]);
+            }
+        }
+
+        // Display password strength and requirements
+        if (password === "") {
+            passwordStrengthInfo.innerHTML = "";
+        } else {
+            if (requirementsMet) {
+                passwordStrengthInfo.innerHTML = '<span class="text-success">Strong password!</span>';
+            } else {
+                passwordStrengthInfo.innerHTML = '<span class="text-danger">Weak password. Requirements:</span><ul class="text-danger">' +
+                    requirementsList.map(item => '<li>' + item + '</li>').join('') + '</ul>';
+            }
+        }
+    }
+
+    document.getElementById('{{ form.password1.auto_id }}').addEventListener('input', checkPasswordStrength);
+</script>
+
+<style>
+    /* Custom style for error messages */
+    .error-message {
+        color: red;
+        font-size: 12px;
+    }
+
+    /* Custom style for requirements messages */
+    .requirements {
+        font-size: 12px;
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    /* Responsive adjustments for small mobile phones */
+    @media (max-width: 576px) {
+        .form-group {
+            padding: 0 15px;
+        }
+        .requirements {
+            font-size: 12px;
+        }
+    }
+</style>
+
+{% endblock %}

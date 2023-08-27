@@ -1,0 +1,107 @@
+{% load custom_tags %}
+
+<div class="container text-white">
+<nav class="navbar navbar-expand-lg navbar-light text-white">
+  <div class="container-fluid text-white">
+    <button class="navbar-toggler text-white" type="button text-white" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon text-white"></span>
+    </button>
+    <button type="button" class="btn btn-light mr-2">macrosecond</button>
+    <a class="navbar-brand text-white" 
+    {% if user.is_authenticated %} 
+    href="{% url 'home' %}"
+    {% else %}
+    href="{% url 'index' %}"
+    {% endif %}
+
+    ><i class="fas"></i>{:=()(}</a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      </ul>
+      <form class="form-inline my-2 my-lg-0" action="{% url 'post_search' %}" method="get">
+        <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+      <!--categories-->
+          <!--custom_tags-->
+      {% load custom_tags %}
+      {% if user.is_authenticated %}
+          <div class="nav-item ">
+            <a class="d-block p-2 bg-success text-white bi bi-file-earmark-diff" href="{% url 'add_post' %}">Add Analysis(:</a>
+          </div>
+           
+          <!--category -->
+          {% if cat_menu %}
+        
+            <div>
+              <a class="d-block p-2 bg-danger text-white bi bi-receipt-cutoff" href="{% url 'gallery' %}">My Broker(:</a>
+            </div>
+              
+          {% endif %}
+          <!--apply it--> 
+          
+          
+          
+          </br>
+         
+      {% endif %}
+      <!--End-->
+      <!--profile-->
+      {% if user.is_authenticated %}
+      <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-white text-white" data-bs-toggle="dropdown" role="buton" aria-expanded="false"><i class="fas fa-user"></i></a>
+        <ul class="dropdown-menu">
+          {% if messages %}
+            <ul class="messages">
+              {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          <!--upload documents-->
+          <!--Profile pictures-->
+           {% if user.profile.pk %}
+          <li></i><a class="dropdown-item d-block p-2 bg-success text-white bi bi-person-square" href="{% url 'profile' request.user.profile.pk %}">Profile</a></li>
+          {% endif %}
+           {% if user.is_authenticated %}
+                <li><a class="dropdown-item d-block p-2 bg-info text-white bi bi-person-lines-fill">{{ user.first_name }}
+                        {{ user.last_name }}</a></li>
+                  
+                    <li></i><a class="dropdown-item d-block p-2 bg-danger text-white bi bi-gear-wide-connected" href="{% url 'edit_profile' %}">Edit 
+                      Settings</a></li>
+
+                      {% if user.profile.pk %}
+                        <li><a class="dropdown-item d-block p-2 bg-warning text-white bi bi-people" href="{% url 'profile-edit' user.profile.pk %}">Edit 
+                        Profile Page</a></li>       
+                     
+                        <li></i><a class="dropdown-item d-block p-2 bg-info text-white bi bi-emoji-smile" href="{% url 'create_profile_page' %}">
+                        Create Profile</a></li>
+
+                      {% endif %}
+                        <li><a class="dropdown-item d-block p-2 bg-secondary text-white bi bi-door-open-fill" href="{% url 'logout' %}">
+                        logout</a></li>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open-fill" viewBox="0 0 16 16">
+                          <path d="M1.5 15a.5.5 0 0 0 0 1h13a.5.5 0 0 0 0-1H13V2.5A1.5 1.5 0 0 0 11.5 1H11V.5a.5.5 0 0 0-.57-.495l-7 1A.5.5 0 0 0 3 1.5V15H1.5zM11 2h.5a.5.5 0 0 1 .5.5V15h-1V2zm-2.5 8c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"/>
+                        </svg>
+                  
+                  
+                </li> 
+                    <li class="nav-item d-inline p-2 bg-info text-white"></li>
+                {% endif %}
+         
+        </ul>
+      </div>
+      <div class="nav-item">
+        {% show_notifications %}
+      </div>
+      
+      <div class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-white text-white" data-bs-toggle="dropdown" role="buton" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></a>
+        <ul class="dropdown-menu">me</ul>
+      </div>
+     
+      {% endif %}
+    </div>
+  </div>
+</nav>
+</div>

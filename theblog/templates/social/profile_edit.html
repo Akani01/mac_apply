@@ -1,0 +1,117 @@
+{% extends 'landing/base.html' %}
+
+{% block content %}
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-6 col-sm-12">
+            <h2 class="text-center">Edit Profile</h2>
+        </div>
+    </div>
+    <br/><br/>
+    <div class="row justify-content-center mt-3 mb-5">
+        <div class="col-md-6 col-sm-12">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.bio.id_for_label }}">Bio</label>
+                    {{ form.bio }}
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-group">
+                        <label for="{{ form.profile_pic.id_for_label }}">Profile Picture</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                {{ form.profile_pic }}
+                                <label class="custom-file-label" for="{{ form.profile_pic.id_for_label }}">Choose file</label>
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button" onclick="document.getElementById('{{ form.profile_pic.id_for_label }}').click()">Browse</button>
+                            </div>
+                        </div>
+                        <img id="profile-pic-preview" class="img-fluid mt-3" style="max-height: 200px;">
+                    </div>
+
+                    <script>
+                        // Display image preview on profile picture upload
+                        function readURL(input) {
+                            if (input.files && input.files[0]) {
+                                var reader = new FileReader();
+                    
+                                reader.onload = function (e) {
+                                    $('#profile-pic-preview').attr('src', e.target.result);
+                                }
+                    
+                                reader.readAsDataURL(input.files[0]);
+                            }
+                        }
+                    
+                        // Trigger the file input browse when "Browse" button is clicked
+                        function browseFile() {
+                            document.getElementById('{{ form.profile_pic.id_for_label }}').click();
+                        }
+                    
+                        // Listen for changes in the file input field and call readURL function
+                        document.getElementById('{{ form.profile_pic.id_for_label }}').addEventListener('change', function() {
+                            readURL(this);
+                        });
+                    </script>
+    
+                <div class="form-group">
+                    <label for="{{ form.facebook_url.id_for_label }}">facebook</label>
+                    {{ form.facebook_url }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.twitter_url.id_for_label }}">twitter_url</label>
+                    {{ form.twitter_url }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.instagram_url.id_for_label }}">instagram_url</label>
+                    {{ form.instagram_url }}
+                </div>
+                <!-- Add other form fields here -->
+                
+                <button type="submit" class="btn btn-warning">Update Profile</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Display image preview on profile picture upload
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#profile-pic-preview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Trigger the file input browse when "Browse" button is clicked
+    function browseFile() {
+        document.getElementById('{{ form.profile_pic.id_for_label }}').click();
+    }
+
+    // Listen for changes in the file input field and call readURL function
+    document.getElementById('{{ form.profile_pic.id_for_label }}').addEventListener('change', function() {
+        readURL(this);
+    });
+
+    // Adjust image preview height on window resize
+    $(window).on('resize', function() {
+        var maxHeight = $(window).height() * 0.4; // Adjust the 0.4 factor as needed
+        $('#profile-pic-preview').css('max-height', maxHeight + 'px');
+    });
+    
+    // Trigger initial resize event
+    $(window).resize();
+</script>
+
+{% endblock %}

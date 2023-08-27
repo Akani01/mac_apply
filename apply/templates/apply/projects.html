@@ -1,0 +1,64 @@
+{% extends 'landing/base.html' %}
+{% load static %}
+
+{% block title %}{:=()){% endblock %}
+
+
+{% block content %}
+
+<br>
+<br>
+<section class="container">
+  {% for post in object_list %}
+    <div class="yuRUbf"><a href="{% url 'article-detail' post.pk %}">
+    {{ post.about }}</a> 
+    
+    {{ post.author.first_name }} 
+    {{ post.author.last_name }} - 
+    {{ post.post_date }} <small>
+    
+    {% if user.is_authenticated %}
+      {% if user.id == post.author.id %}
+       -<a href="{% url 'update_post' post.pk %}">(edit)</a>
+    
+        <a href="{% url 'delete_post' post.pk %}">(Delete)</a>
+      {% endif %}
+    {% endif %}
+
+     </small> <br/>
+     {{ post.snippet}}</li>
+{% endfor %}
+     
+</section>
+ <!--this is tail navbar-->
+<br>
+<!--colors carousel-->
+ <div class="container my-4">
+      <p>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand bi bi-building">Bootcamps</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+   
+              <li class="nav-item">
+                <a class="nav-link active bi bi-aspect-ratio" aria-current="page" href="{% url 'add_project' %}">Add Event</a>
+              </li> 
+            {% if request.user == post.author %}
+              <li class="nav-item">
+                <a class="nav-link bi bi-bookmark-plus" href="{% url 'post-edit' post.pk %}">Update Event</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link bi bi-basket3" href="{% url 'post-delete' post.pk %}">Delete Event</a>
+              </li>
+            {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </p>
+        <!--end-->
+{% endblock %}

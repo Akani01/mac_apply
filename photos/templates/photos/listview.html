@@ -1,0 +1,125 @@
+{% extends 'landing/base.html' %}
+
+{% block content %}
+    <style>
+        .image-thumbnail {
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer; /* Add cursor pointer to make the image clickable */
+        }
+
+        .list-group-item a {
+            text-decoration: none;
+            color: black;
+        }
+
+        /* Custom styles for the card and container */
+        .custom-card {
+            border: none;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, border-color 0.3s; /* Added border-color transition */
+            border-color: transparent; /* Initial border color */
+            height: 100%; /* Set the card height to take full container height */
+            display: flex;
+            flex-direction: column; /* Arrange items vertically */
+            justify-content: space-between; /* Distribute space evenly */
+        }
+
+        .custom-card:hover {
+            transform: scale(1.05);
+            border-color: #d2dde2; /* Change border color on hover */
+        }
+
+        .custom-container {
+            background-color: #43586d;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            height: 100%; /* Set the container height to take full card height */
+        }
+
+        .custom-heading {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+
+    <body class="m-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                            Categories
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <a href="{% url 'gallery' %}">All</a>
+                            </li>
+                            {% for category in categories %}
+                            <li class="list-group-item">
+                                <a href="{% url 'photoview' %}?category={{category.name}}">
+                                    {{category.name}}
+                                </a>
+                            </li>
+                            {% endfor %}
+                            <a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">Add Prop firm</a>
+                            <a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">Logout</a>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="custom-heading">Prop firm</h1>
+                        </div>
+                        {% for photo in photos %}
+                        <div class="col-md-4">
+                            <div class="custom-container">
+                                <div class="card custom-card">
+                                    {% if user.is_authenticated %}
+                                    {% if user.id == photo.author.id %}
+                                    <a href="{% url 'delete-photo' photo.id %}" class="edit-color"><i class="fas fa-trash"></i></a>
+                                    {% endif %}
+                                    {% endif %}
+                                    <a href="{% url 'photo' photo.id %}">
+                                        <img class="image-thumbnail" src="{{photo.image.url}}" alt="Card image cap">
+                                    </a>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ photo.description }}</h5>
+                                        <p class="card-text">Category: {{ photo.category.name }}</p>
+                                        <ul class="list-unstyled">
+                                            {% if photo.website_url %}
+                                            <li><a href="https://{{ photo.website_url }}">Website</a></li>
+                                            {% endif %}
+                                            {% if photo.whatsapp_number %}
+                                            <li>
+                                                <a href="https://wa.me/{{ photo.whatsapp_number }}" target="_blank" class="whatsapp">
+                                                    <i class="bx bxl-whatsapp">WhatsApp</i>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                            {% if photo.facebook_url %}
+                                            <li><a href="https://{{ photo.facebook_url }}">Facebook</a></li>
+                                            {% endif %}
+                                            {% if photo.twitter_url %}
+                                            <li><a href="https://{{ photo.twitter_url }}">Twitter</a></li>
+                                            {% endif %}
+                                            <!-- Add more links with the unique variable (https://) as needed -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-md-12">
+                            <h3>No Prop firm Found</h3>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+{% endblock %}

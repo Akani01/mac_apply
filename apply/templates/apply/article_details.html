@@ -1,0 +1,209 @@
+{% extends 'landing/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<!--by colors-->
+</br>
+<section class="container">
+ <div class="row justify-content-center mt-5">
+    <div class="col-md-10 col-sm-12 text-center">   
+    <a class="btn btn-primary bi bi-cloud-upload" target="_blank" href="{% url 'book_list' %}" role="button">
+         Download PDF's
+    </a>
+    <a class="btn btn-warning bi bi-bar-chart-line" target="_blank" href="{% url 'brokergallery' %}" role="button">
+         Broker
+    </a>
+    <a class="btn btn-secondary bi me-2 bi bi-tv" target="_blank"  href="{% url 'about' %}" role="button">
+         Learn more
+    </a>
+    <a class="btn btn-success bi me-2 bi bi-cursor" target="_blank"  href="{% url 'home' %}" role="button">
+         Home
+    </a>
+    <a class="btn btn-danger bi bi-bank" target="_blank"  href="{% url 'add_post' %}" role="button">
+         Post_analysis
+    </a>
+    <a class="btn btn-light bi bi-bag-plus" target="_blank" href="{% url 'addbroker' %}" role="button">
+         Add_broker 
+    </a>
+    <a class="btn btn-dark bi bi-brightness-high" target="_blank" href="{% url 'projects' %}"  role="button">
+         Projects
+    </a>
+
+   </div>
+ </div> 
+
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-5 col-sm-6">
+            <a href="{% url 'home' %}" class="btn btn-light"></a>
+        </div>
+    </div>
+    <!--Post details-->
+
+        
+        <h1>{{ post.title }}</h1> 
+        <small>By:
+            {{ post.author.first_name }} 
+            {{ post.author.last_name }} - 
+            {{ post.created_on }}-
+            
+            {% if user.is_authenticated %}
+            {%if user.id == post.author.id %}
+                -<a href="{% url 'post-edit'  post.pk %}">(Edit)
+                    </a>
+
+                    </a>
+                {% endif %}
+            {% endif %}
+        </small><br/>
+        <hr>
+        <br/>
+        
+        {% if post.header_image %}
+         <img src="{{ post.header_image.url}}" class="img-fluid" alt="...">
+       
+        {% endif %}
+
+        <br/><br/>
+        {{ post.sub_title }}
+        
+        <hr>
+         <p>{{ post.body|safe }}</p>
+        <br/><br/>
+        <hr>
+        <br/>
+        
+    <br/><br/>
+    <!--Photo gallery by 2partners-->
+    <div class="container">
+        <div class="row mt-6">
+            <div class="col">
+              <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        Categories
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="{% url 'listview' %}" class="btn btn-dark btn-block btn-sm m-1">View Solutions</a>
+                        </li>
+                        <li class="list-group-item">
+                            <a href="{% url 'gallery' %}" class="btn btn-dark btn-block btn-sm m-1">My Analysis</a>
+                        </li>
+                        {% for category in categories %}
+                        <li class=" list-group-item">
+                            <a href="{% url 'gallery' %}?category={{category.name}}">
+                                {{category.name}}
+                            </a>
+                        </li>
+                        {% endfor %}
+
+
+                        <a href="{% url 'add' %}" class="btn btn-dark btn-block btn-sm m-1">Add Photo</a>
+                        <a href="{% url 'logout' %}" class="btn btn-dark btn-block btn-sm m-1">Logout</a>
+                    </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+            
+            <div class="card mb-3">
+            <div class="row no_gutters">
+                <div class="col-md-4">
+                {% if post.author.profile.picture %}
+                    <img src="{{ post.author.profile.picture.url }}"
+                        class="card-img">
+
+                {% else %}
+                    <img src="{% static 'theblog/images/default_profile_pic.png' %}" 
+                    class="card-img">
+                {% endif %}
+                       
+                </div>
+                <div class="col-md-10">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ post.author.first_name }} 
+                        {{ post.author.last_name }}
+                          
+                            
+                               
+                    </h5>     
+                <p class="small text-muted">
+                {% if post.author.profile.website_url %}
+                    | <a href="{{ post.author.profile.website_url }}" class="Website"><i class="bx bxl-Website">
+                    Website</i></a>
+                {% endif %}
+                    
+                {% if post.author.profile.facebook_url %}
+                    | <a href="{{ post.author.profile.facebook_url }}" class="facebook"><i class="bx bxl-facebook">
+                    facebook</i></a> 
+                {% endif %}
+
+                {% if post.author.profile.twitter_url %}
+                    | <a href="{{ post.author.profile.twitter_url }}" class="twitter"><i class="bx bxl-twitter">
+                    Twitter</i></a> 
+                {% endif %}
+
+                {% if post.author.profile.Instagram_url %}
+                    | <a href="{{ post.author.profile.Instagram_url }}" class="Instagram"><i class="bx bxl-Instagram">
+                    Instagram</i></a> 
+                {% endif %}
+
+                {% if post.author.profile.pinterest_url %}
+                    | <a href="{{ post.author.profile.pinterest_url }}" class="pinterest"><i class="bx bxl-pinterest">
+                    Pinterest</i></a>
+                {% endif %}
+                <!--qr-code-->
+                  <div class="ui container">
+                    <img src={{obj.qr_code.url}}>
+                    </p>
+                    <p class="card-text">
+                        {{ post.author.profile.bio }}
+                    </p>
+                  </div>
+                <hr>
+                   {% if request.user == post.author %}
+              
+                <!--end category-->
+                    <a href="{% url 'post-edit' post.pk %}" class="edit-color"><i class="far fa-edit"></i></a>
+                    <a href="{% url 'post-delete' post.pk %}" class="edit-color"><i class="fas fa-trash"></i></a>
+                {% endif %}
+                <p>Followers: {{ profile.followers.all.count }}</p>
+                
+                <div class="d-flex flex-row">
+                <form method="POST" action="{% url 'like' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="remove-default-btn" type="submit">
+                        <i class="far fa-thumbs-up"> <span>{{ post.likes.all.count }}</span></i>
+                    </button>
+                </form>
+
+                <form method="POST" action="{% url 'dislike' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="remove-default-btn" type="submit">
+                        <i class="far fa-thumbs-down"> <span>{{ post.dislikes.all.count }}</span></i>
+                    </button>
+                </form>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+            
+        <!--End profile-->
+        </div>
+        </div>
+          
+               
+
+    <hr>
+
+      
+
+</section>  
+{% endblock content %}

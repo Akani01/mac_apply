@@ -1,0 +1,15 @@
+{% extends "landing/base.html" %}
+{% block title %}Apply to{% endblock %}
+
+
+{% block content %}
+</br>
+</br></br>
+       <h1>Apply to</h1>
+      
+        {% for item in apply_menu_list  %}
+            <h4><a class="dropdown-item" href="{% url 'applywhere' item|slugify %}">{{item}}</a></h4>
+        {% endfor %}
+
+        
+{% endblock %}

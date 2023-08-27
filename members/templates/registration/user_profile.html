@@ -1,0 +1,151 @@
+{% extends 'landing/base.html' %}
+{% load static %}
+
+{% block title %}APPLY IT{% endblock %}
+
+
+{% block content %}
+
+</br>
+</br></br>
+<div class="jumbotron text-center">
+   <div class="card mb-3">
+    <div class="row no_gutters">
+        <div class="col-md-2">
+    {% if post.author.profile.picture %}
+        <img src="{{ post.author.profile.picture.url }}"
+            class="card-img">
+    {% else %}
+        <imf src="{% static 'static/theblog/images/ 
+        default_profile_pic.png' %}" class="
+        card-img">
+    {% endif %}
+        </div>
+        <div class="col-md-10">
+        <div class="card-body">
+            <h5 class="card-title">
+                {{ page_user.user.first_name }} 
+                {{ page_user.user.last_name }}
+            </h5>
+             
+            <p class="small text-muted">
+              
+                {% if post.author.profile.website_url %}
+                    | <a href="{{ post.author.profile.website_url }}" ><i class="bx bxl-Website"></i>
+                    Website</a>
+                {% endif %}
+
+                {% if post.author.profile.google_url %}
+                     <a href="{{ post.author.profile.google_url }}" ><i class="bx bxl-google"></i>
+                    Google</a> 
+                {% endif %}
+
+                {% if post.author.profile.playstore_url %}
+                     <a href="{{ post.author.profile.playstore_url }}" ><i class="bx bxl-playstore"></i>
+                    Playstore</a> 
+                {% endif %}
+
+                 {% if post.author.profile.zoom_url %}
+                     <a href="{{ post.author.profile.zoom_url }}" ><i class="bx bxl-zoom"></i>
+                    zoom</a> 
+                {% endif %}
+                    
+                {% if post.author.profile.facebook_url %}
+                    | <a href="{{ post.author.profile.facebook_url }}" ><i class="bx bxl-facebook"></i>
+                    facebook</a> 
+                {% endif %}
+
+                {% if post.author.profile.twitter_url %}
+                    | <a href="{{ post.author.profile.twitter_url }}" ><i class="bx bxl-twitter"></i>
+                    twitter
+                    </a> 
+                {% endif %}
+
+                {% if post.author.profile.Instagram_url %}
+                    | <a href="{{ post.author.profile.Instagram_url }}" ><i class="bx bxl-Instagram"></i>
+                    Instagram</a> 
+                {% endif %}
+                
+                {% if post.author.profile.pinterest_url %}
+                    | <a href="{{ post.author.profile.pinterest_url }}" ><i class="bx bxl-pinterest"></i>
+                    youtube</a>
+                {% endif %}
+
+                {% if post.author.profile.pinterest_url %}
+                    | <a href="{{ post.author.profile.pinterest_url }}" ><i class="bx bxl-pinterest"></i>
+                    Pinterest</a>
+                {% endif %}
+                <hr>
+                {% if post.author.profile.qr_code %}
+                    <img src="{{ post.author.profile.qr_code.url }}"
+                        class="card-img">
+                {% endif %}
+                </p>
+                <p class="card-text">
+                    {{ post.author.profile.bio }}
+                </p>
+                </div>
+                </div>
+    </div>
+   </div>
+   
+<!--Colors followers-->
+<div class="row justify-content-center mt-5">
+    <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-5 py-3">
+        
+    
+        {% if user == request.user %}
+            {% else %}
+            {% if is_following %}
+                <form method="POST" action="{% url 'remove-follower' profile.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger" type="submit">Unfollow</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{% url 'add-follower' profile.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-success" type="submit">Follow</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+<!--End-->
+
+{% for post in posts %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-sm-12 border-bottom">
+        <div>
+            
+            <p class="post-text">
+                <a class="text-primary post-link" href="{% url 'profile' post.author.profile.pk %}">{{ post.author }}</a> {{ post.created_on }}
+            </p>
+        </div>
+        <div class="position-relative">
+            <p>{{ post.body|safe  }}</p>
+            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+        </div>
+
+        <div class="d-flex flex-row">
+            <form method="POST" action="{% url 'like' post.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button class="remove-default-btn" type="submit">
+                    <i class="far fa-thumbs-up"> <span>{{ post.likes.all.count }}</span></i>
+                </button>
+            </form>
+
+            <form method="POST" action="{% url 'dislike' post.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button class="remove-default-btn" type="submit">
+                    <i class="far fa-thumbs-down"> <span>{{ post.dislikes.all.count }}</span></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endfor %}
+{% endblock %}
+
